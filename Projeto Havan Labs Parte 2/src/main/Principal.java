@@ -17,6 +17,10 @@ public class Principal {
 
 	public static void main(String[] args) throws SQLException, ParseException {
 		Connection myConn = Conexao.createConnection();
+		Conexao.createDataBase();
+		Conexao.createCurrencyTable();
+		Conexao.createRegisterTable();
+
 		PreparedStatement myStmt = null;
 		ResultSet myRs = null;
 
@@ -25,8 +29,9 @@ public class Principal {
 
 		int opt = 0;
 
-		do {			
-			opt = Integer.parseInt(JOptionPane.showInputDialog("Opcoes"));
+		do {
+			opt = Integer.parseInt(JOptionPane
+					.showInputDialog("Opcoes \n 1 - Nova operacao \n 2 - Nova moeda \n 3 - Relatorios \n 9 - Sair"));
 			switch (opt) {
 			case 1:
 				String clientName = JOptionPane.showInputDialog("Nome").toUpperCase();
@@ -37,7 +42,7 @@ public class Principal {
 				double firstCurrencyValue = Conexao.getCurrencyValue(firstCurrency);
 				double secCurrencyValue = Conexao.getCurrencyValue(secCurrency);
 				double converted = calculadora.convert(firstCurrencyValue, secCurrencyValue, quant);
-				double tax = calculadora.tax(converted);
+				double tax = calculadora.tax(quant, firstCurrencyValue);
 
 				try {
 					Conexao.insertRegister(clientName, firstCurrency, secCurrency, quant, converted, tax);
@@ -57,36 +62,21 @@ public class Principal {
 				Conexao.insertCurrency(currencyName, currencyValue);
 				break;
 			case 3:
-				int filter = Integer.parseInt(JOptionPane.showInputDialog("Opções de filtro \n 1 - Data\n 2 - Nome do cliente \n 3 - Todos"));
-				/*String inicialDateInput = JOptionPane.showInputDialog("Data inicial na ordem yyyy/mm/dd");
-				Date inicialDate = format.parse(inicialDateInput);*/
+				int filter = Integer.parseInt(JOptionPane.showInputDialog("Opções de filtro "
+						+ "\n 1 - Todos por nome "
+						+ "\n 2 - Todos registros "
+						+ "\n 3 - Valor total"));
 				
-				if(filter == 2) {
-					clientName = JOptionPane.showInputDialog("Nome moeda").toUpperCase();
-					Conexao.getRegistersByName(clientName);					
-				} else if (filter == 3){
+				if (filter == 1) {
+					clientName = JOptionPane.showInputDialog("Nome cliente").toUpperCase();
+					Conexao.getRegistersByName(clientName);
+				} else {
 					Conexao.getAllRegisters();
 				}
-				
+
 				break;
 			}
 		} while (opt != 9);
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

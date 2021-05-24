@@ -21,8 +21,8 @@ public class Calculadora {
 		return (origin * quant) / destiny;
 	}
 	
-	public double tax(double value) {
-		return value * tax;
+	public double tax(double quant, double currency) {
+		return quant * currency * tax;
 	}
 	
 	public String sum(String conversao, String taxa) {
